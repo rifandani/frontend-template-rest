@@ -2,10 +2,9 @@ import Head from 'next/head'
 // files
 import HomeComp from '../components/Home'
 
-export const HomePage = (): React.FC => {
+export const HomePage = (): JSX.Element => {
   return (
     <>
-      {/* @ts-ignore */}
       <Head>
         <title>Home</title>
       </Head>

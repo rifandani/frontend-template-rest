@@ -18,25 +18,23 @@ axios.defaults.baseURL =
     ? 'http://localhost:3000/api'
     : 'https://roompy.vercel.app/api'
 
-export default function MyApp({ Component, pageProps }: AppProps): React.FC {
+export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <>
-      {/* @ts-ignore */}
       <Head>
         <title>Website | Template</title>
-        {/* meta */}
+        <meta property="og:title" content="My page title" key="title" />
+        <link rel="icon" href="favicon.ico" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="favicon.ico" />
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
         <meta name="twitter:title" content="Roompy | Find your soul roommate" />
         <meta name="twitter:card" content="summary" />
-        <meta property="og:type" content="website" />
         <meta name="description" content="Deskripsi website." />
-        <meta property="og:image" content="favicon.ico" />
         <meta name="twitter:image" content="favicon.ico" />
-        {/* link */}
-        <link rel="icon" href="favicon.ico" />
       </Head>
 
       <SWRConfig
