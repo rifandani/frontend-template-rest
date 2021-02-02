@@ -1,7 +1,15 @@
+import useSWR from 'swr'
+
 const HomeComp = (): JSX.Element => {
+  const { data, error } = useSWR('/users')
+
   return (
-    <main className="items-center justify-center bg-blue-300">
-      <p className="text-red-500">Home Comp</p>
+    <main className="items-center w-full min-h-screen bg-blue-100">
+      {!data && !error && 'Loading'}
+
+      {error && JSON.stringify(error, null, 4)}
+
+      {data && JSON.stringify(data, null, 4)}
     </main>
   )
 }

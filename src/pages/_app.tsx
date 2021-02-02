@@ -15,7 +15,7 @@ import '../styles/index.css'
 // axios BASE URL
 axios.defaults.baseURL =
   process.env.NODE_ENV === 'development'
-    ? 'http://localhost:3000/api'
+    ? 'https://jsonplaceholder.typicode.com'
     : 'https://roompy.vercel.app/api'
 
 export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
