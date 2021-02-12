@@ -2,7 +2,7 @@ import Head from 'next/head'
 // files
 import HomeComp from '../components/Home'
 
-export const HomePage = (): JSX.Element => {
+const HomePage = (): JSX.Element => {
   return (
     <>
       <Head>

@@ -1,6 +1,6 @@
 import useSWR from 'swr'
 
-const HomeComp = (): JSX.Element => {
+const HomeComp: React.FC = () => {
   const { data, error } = useSWR('/users')
 
   return (

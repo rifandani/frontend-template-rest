@@ -18,7 +18,7 @@ axios.defaults.baseURL =
     ? 'https://jsonplaceholder.typicode.com'
     : 'https://roompy.vercel.app/api'
 
-export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
+const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   return (
     <>
       <Head>
@@ -49,3 +49,5 @@ export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
     </>
   )
 }
+
+export default MyApp
