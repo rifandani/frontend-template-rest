@@ -8,9 +8,11 @@ import 'react-toastify/dist/ReactToastify.css'
 // axios + swr
 import axios from 'axios'
 import { SWRConfig } from 'swr'
+import { Provider } from 'react-redux'
 // files
 import '../styles/index.css'
 // import 'tailwindcss/tailwind.css'
+import store from '../redux/store'
 
 // axios BASE URL
 axios.defaults.baseURL =
@@ -37,15 +39,17 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
         <meta name="twitter:image" content="favicon.ico" />
       </Head>
 
-      <SWRConfig
-        value={{
-          // refreshInterval: 3000, // automatic re-fetching data in API every 3s
-          fetcher: (url: string) => axios.get(url).then((res) => res.data),
-        }}
-      >
-        <Component {...pageProps} />
-        <ToastContainer />
-      </SWRConfig>
+      <Provider store={store}>
+        <SWRConfig
+          value={{
+            // refreshInterval: 3000, // automatic re-fetching data in API every 3s
+            fetcher: (url: string) => axios.get(url).then((res) => res.data),
+          }}
+        >
+          <Component {...pageProps} />
+          <ToastContainer />
+        </SWRConfig>
+      </Provider>
     </>
   )
 }
