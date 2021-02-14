@@ -1,15 +1,33 @@
+import axios from 'axios'
 import {
   Action,
   AnyAction,
   createAsyncThunk,
   createSlice,
-  PayloadAction,
+  // PayloadAction,
 } from '@reduxjs/toolkit'
 
-interface Note {
+export interface Note {
   id: number
   text: string
   completed: boolean
+}
+
+interface GetNotesResp {
+  success: boolean
+  msg?: string
+  todos?: Note[]
+}
+
+interface GetNoteResp {
+  success: boolean
+  msg?: string
+  todos?: Note
+}
+
+interface AddNoteResp {
+  success: boolean
+  msg: string
 }
 
 type NoteLoadingState = 'idle' | 'loading' | 'loaded' | 'error'
@@ -23,13 +41,47 @@ function isRejectedAction(action: AnyAction): action is RejectedAction {
 }
 
 // create async thunk reducers
-export const loadNotes = createAsyncThunk(
-  'notes/loadNotes',
+// GET /notes
+const getNotes = createAsyncThunk<GetNotesResp>(
+  'notes/getNotes',
   async (_, thunkAPI) => {
     try {
-      const response = await fetch('/api/notes')
+      const response = await axios.get('http://localhost:3000/api/notes')
 
-      return response.json()
+      return response?.data
+    } catch (error) {
+      // error.message berasal dari AxiosError
+      return thunkAPI.rejectWithValue({ error: error.message })
+    }
+  }
+)
+
+// GET /notes/:id
+const getNote = createAsyncThunk<GetNoteResp, number>(
+  'notes/getNote',
+  async (id, thunkAPI) => {
+    try {
+      const resp = await axios.get(`http://localhost:3000/api/notes/${id}`)
+
+      return resp?.data
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error.message })
+    }
+  }
+)
+
+// POST /notes
+const addNote = createAsyncThunk<AddNoteResp, string>(
+  'notes/addNotes',
+  async (text, thunkAPI) => {
+    try {
+      const resp = await axios.post('http://localhost:3000/api/notes', {
+        id: Math.floor(Math.random() * 1000000),
+        text,
+        completed: false,
+      })
+
+      return resp?.data
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.message })
     }
@@ -45,18 +97,24 @@ const notesSlice = createSlice({
   name: 'notes',
   initialState: {
     notes: [] as Note[],
-    loading: 'idle' as NoteLoadingState,
+    loading: 'idle' as NoteLoadingState, // using state-machine style instead of boolean
     error: null as RejectedAction,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(loadNotes.pending, (state, _) => {
-        state.notes = []
+      .addCase(getNotes.pending, (state, _) => {
         state.loading = 'loading'
+        state.notes = []
       })
-      .addCase(loadNotes.fulfilled, (state, action: PayloadAction<Note>) => {
-        state.notes.push(action.payload)
+      // manual casting action: PayloadAction<Note[]>
+      .addCase(getNotes.fulfilled, (state, action) => {
+        // action.payload === resp.data === { success: true, todos: Note[] }
+        state.loading = 'loaded'
+        state.notes = action.payload.todos
+      })
+      .addCase(addNote.fulfilled, (state, _) => {
+        // action.payload === resp.data === { success: true, msg: string }
         state.loading = 'loaded'
       })
       .addMatcher(
@@ -73,5 +131,13 @@ const notesSlice = createSlice({
       .addDefaultCase((_, __) => {})
   },
 })
+
+export {
+  getNotes,
+  getNote,
+  addNote,
+  // editNotes,
+  // deleteNotes,
+}
 
 export default notesSlice.reducer
